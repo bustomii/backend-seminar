@@ -1,12 +1,16 @@
 import express from 'express'
 import routes from './routes/index.js'
 import cors from 'cors'
-const app = express()
+import db from './models/index.js'
 
+const app = express()
+db.sequelize.sync({force: false}).then(() => {
+    console.log('Database Connected');
+  });
 // middleware
 app.use(cors())
 app.use(express.json())
-app.use('/api', routes)
+app.use('/', routes)
 
 // listening to port
-app.listen('3001', () => console.log('Server Running at port: 3001'))
+app.listen('4000', () => console.log('Server Running at port: 4000'))
