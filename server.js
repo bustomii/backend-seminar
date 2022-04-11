@@ -2,6 +2,7 @@ import express from 'express'
 import routes from './routes/index.js'
 import cors from 'cors'
 import db from './models/index.js'
+import fileUpload from 'express-fileupload'
 
 const app = express()
 db.sequelize.sync({force: false}).then(() => {
@@ -9,6 +10,8 @@ db.sequelize.sync({force: false}).then(() => {
   });
 // middleware
 app.use(cors())
+app.use(fileUpload());
+app.use(express.static("files"));
 app.use(express.json())
 app.use('/', routes)
 

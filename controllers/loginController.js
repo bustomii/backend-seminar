@@ -11,14 +11,18 @@ export const signin = (req, res) => {
         }
     }).then(user => {
         if (!user) {
-            return res.status(404).send({ message: "User Not found." });
+            return res.status(200).send({
+                status:404,
+                message: "User Not found." 
+            });
         }
         var passwordIsValid = bcrypt.compareSync(
             req.body.password,
             user.password
         );
         if (!passwordIsValid) {
-            return res.status(401).send({
+            return res.status(200).send({
+                status:401,
                 accessToken: null,
                 message: "Invalid Password!"
             });
@@ -28,6 +32,7 @@ export const signin = (req, res) => {
         });
 
         res.status(200).send({
+            status:200,
             id: user.id,
             username: user.username,
             accessToken: token
@@ -36,3 +41,17 @@ export const signin = (req, res) => {
         res.status(500).send({ message: err.message });
     });
 };
+
+export const signup = (req, res) => {
+    User.create({
+        username: "admin",
+        password: bcrypt.hashSync("@Astronacci2022", 8)
+      })
+        .then(user => {
+            return res.status(401).send({
+                message: "Success Created Account!"
+            });
+        }).catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+}

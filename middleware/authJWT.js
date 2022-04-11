@@ -1,14 +1,15 @@
 import jwt from "jsonwebtoken"
-import config from "../config/auth.js"
+import { secret } from "../config/auth.js";
 
 const verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
+    let token = req.headers["authorization"].replace("Bearer ","");
     if (!token) {
         return res.status(403).send({
+            token,
             message: "No token provided!"
         });
     }
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
         return res.status(401).send({
             message: "Unauthorized!"
