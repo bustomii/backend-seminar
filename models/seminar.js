@@ -1,16 +1,22 @@
 export default (sequelize, Sequelize) => {
     const Seminar = sequelize.define("present", {
       nama: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        required: true,
+        allowNull: false
       },
       no_tlp: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        required: true,
+        allowNull: false
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        required: true,
+        allowNull: false
       },
       status: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         defaultValue:0
       }
     })

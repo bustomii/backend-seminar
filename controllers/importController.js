@@ -7,51 +7,41 @@ export const ImportData = async (req, res) => {
     const file = req.files.file
     const filename = CreateRandomNameFile(25)+'.'+req.body.extention
 
-    // file.mv('D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/' + filename)
+    await file.mv('D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/' + filename)
 
-    try {
-        const read = reader.readFile(`D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/3pmtpI9iXpAz2eMO22vHCXPlm.xlsx`)
-        const sheets = read.SheetNames
-        
-        const array =[]
-        for(let i = 0; i < sheets.length; i++)
-        {
-            const temp = reader.utils.sheet_to_json(
-                read.Sheets[read.SheetNames[i]])
-            temp.forEach((res) => {
-                array.push(res)
+    const read = reader.readFile(`D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/${filename}`)
+    const sheets = read.SheetNames
+
+    const temp = reader.utils.sheet_to_json(read.Sheets[read.SheetNames[0]])
+
+    const dataSave = []
+    for(let x=0; x < temp.length; x++){
+        try{
+            const addData = await Seminar.create({
+            nama:temp[x].Nama,
+            email:temp[x].Email,
+            no_tlp:temp[x]["No Hp"]
+        })
+        dataSave.push(addData)
+        }catch (err) {
+            for(let y= 0; y<dataSave.length; y++){
+                await Seminar.destroy({ where: { id: dataSave[y].id } })
+            }
+            res.send({
+                status:400,
+                message : 'Please cek data ! Column require value',
             })
         }
-
-        res.send({
-            sheets:sheets.length,
-            array
-        })
-
-        res.send({
-            array
-        })
-    }catch (err) {
-        res.send(err)
     }
+    await Seminar.findAll({}).then(value => {
+        res.status(200).send({
+            message : 'Import data success',
+            status:200,
+            data:value,
+    })}).catch(err => {
+        res.status(500).send({ message: err.message });
+    });
 }
-
-const functionRead = (filename) => {
-    const array = []
-    const read = reader.readFile(`D:/Working%20File_Bustomi/App%20Seminar/backend-seminar/public/uploads/LuyCWDDbFnLzktxSQyPSlzLvX.xlsx`)
-
-    for(let i = 0; i < sheets.length; i++){
-        const temp = reader.utils.sheet_to_json(
-        read.Sheets[read.SheetNames[i]])
-        
-        temp.forEach((res) => {
-            array.push(res)
-        })
-    }
-
-    return array
-}
-
 
 const CreateRandomNameFile = (length) => {
     var result           = '';
