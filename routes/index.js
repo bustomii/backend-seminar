@@ -7,7 +7,7 @@ import { DataSeminar, DeleteAll } from '../controllers/seminarController.js'
 import authJwt from '../middleware/authJWT.js'
 const router = express.Router()
 
-// router.post('/signup', signup)
+router.post('/signup', signup)
 router.post('/login', signin)
 router.get('/data-seminar', authJwt.verifyToken, DataSeminar)
 router.post('/import-data',  authJwt.verifyToken, ImportData)
