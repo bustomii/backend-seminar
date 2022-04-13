@@ -1,15 +1,16 @@
 import readXlsxFile from 'read-excel-file'
 import db from "../models/index.js"
 import reader from 'xlsx';
+import path from 'path';
 
 const Seminar = db.seminar;
 export const ImportData = async (req, res) => {
     const file = req.files.file
     const filename = CreateRandomNameFile(25)+'.'+req.body.extention
 
-    await file.mv('D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/' + filename)
+    await file.mv(path.resolve() + '/public/uploads/' + filename)
 
-    const read = reader.readFile(`D:/Working File_Bustomi/App Seminar/backend-seminar/public/uploads/${filename}`)
+    const read = reader.readFile(`${path.resolve()}/public/uploads/${filename}`)
     const sheets = read.SheetNames
 
     const temp = reader.utils.sheet_to_json(read.Sheets[read.SheetNames[0]])
@@ -37,7 +38,7 @@ export const ImportData = async (req, res) => {
         res.status(200).send({
             message : 'Import data success',
             status:200,
-            data:value,
+            data:value
     })}).catch(err => {
         res.status(500).send({ message: err.message });
     });
