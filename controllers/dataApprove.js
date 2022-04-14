@@ -1,6 +1,8 @@
 import db from "../models/index.js"
+import bcrypt from "bcryptjs";
 
 const Seminar = db.seminar;
+const User = db.user;
 export const dataApprove = async (req, res) => {
     try { 
         const data = await Seminar.findByPk(req.body.id)
@@ -21,4 +23,22 @@ export const dataApprove = async (req, res) => {
     }
 }
 
+export const resetPasswordApprove = async (req, res) => {
+    try { 
+        const data = await User.findByPk(req.body.id)
+        if(data){
+            await data.update({reset_password:0, password:bcrypt.hashSync('@Astronacci2022', 8)})
+            await data.save()
+            res.status(201).send({
+                message:true
+            })
+        }else{
+            res.status(201).send({
+                message:false
+            })
+        }
+    }catch (err) {
+        res.send(err)
+    }
+}
 

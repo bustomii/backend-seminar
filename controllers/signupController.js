@@ -11,12 +11,62 @@ export const signup = (req, res) => {
         password: bcrypt.hashSync(req.body.password, 8)
       })
         .then(user => {
-            return res.status(401).send({
+            return res.status(201).send({
                 message: "Success Created Account!",
-                display_name:''
             });
         }).catch(err => {
             res.status(500).send({ message: err.message });
         });
+}
 
+export const cekUsername = (req, res) => {
+    User.findOne({
+        where: {
+            username: req.body.username
+        }
+    }).then(user => {
+        if(user == null){
+            return res.status(201).send({
+                message:false
+            })
+        }else{
+            return res.status(201).send({
+                message:true
+            })
+        }
+    }).catch(err => {
+        res.status(500).send({ message: err.message });
+    });
+}
+
+export const deleteAllUser = async (req, res) => {
+    const arrayID = req.body.id
+    try {
+        for(let i=0; i<arrayID.length; i++){
+            await User.destroy({where: {
+                id:arrayID[i]
+            }})
+        }
+        res.status(200).send({ message: true });
+    }catch (err) {
+        res.status(500).send({ message: false });
+    }
+}
+
+export const deleteUser = (req, res) => {
+    User.destroy({where: {
+        id:req.body.id
+    }}).then(user => {
+        if(user == null){
+            return res.status(201).send({
+                message:false
+            })
+        }else{
+            return res.status(201).send({
+                message:true
+            })
+        }
+    }).catch(err => {
+        res.status(500).send({ message: err.message });
+    });
 }

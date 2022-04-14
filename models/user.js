@@ -1,7 +1,9 @@
 export default (sequelize, Sequelize) => {
     const User = sequelize.define("users", {
       username: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
       display_name: {
         type: Sequelize.STRING

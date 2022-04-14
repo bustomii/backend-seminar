@@ -42,16 +42,25 @@ export const signin = (req, res) => {
     });
 };
 
-export const signup = (req, res) => {
-    User.create({
-        username: "admin",
-        password: bcrypt.hashSync("@Astronacci2022", 8)
-      })
-        .then(user => {
-            return res.status(401).send({
-                message: "Success Created Account!"
-            });
-        }).catch(err => {
-            res.status(500).send({ message: err.message });
-        });
+
+export const requestReset = async (req, res) =>  {
+    try { 
+        const data = await User.findOne({where : {
+            username:req.body.username
+        }}).then((res))
+
+        if(data){
+            await data.update({reset_password:1})
+            await data.save()
+            res.status(201).send({
+                message:true
+            })
+        }else{
+            res.status(201).send({
+                message:false
+            })
+        }
+    }catch (err) {
+        res.send(err)
+    }
 }
