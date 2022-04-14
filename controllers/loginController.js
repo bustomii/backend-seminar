@@ -64,3 +64,22 @@ export const requestReset = async (req, res) =>  {
         res.send(err)
     }
 }
+
+export const changePassword = async (req, res) => {
+    try { 
+        const data = await User.findByPk(req.userId)
+        if(data){
+            await data.update({reset_password:0, password:bcrypt.hashSync(req.body.password, 8)})
+            await data.save()
+            res.status(201).send({
+                message:true
+            })
+        }else{
+            res.status(201).send({
+                message:false
+            })
+        }
+    }catch (err) {
+        res.send(err)
+    }
+}
