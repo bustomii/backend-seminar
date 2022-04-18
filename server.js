@@ -3,11 +3,17 @@ import routes from './routes/index.js'
 import cors from 'cors'
 import db from './models/index.js'
 import fileUpload from 'express-fileupload'
+import fs from "fs"
 
-const app = express()
+var privateKey = fs.readFileSync('./private.key');
+var certificate = fs.readFileSync('./root.crt');
+
+var credentials = {key: privateKey, cert: certificate};
+
+const app = express(credentials)
 db.sequelize.sync({force: false}).then(() => {
-    console.log('Database Connected');
-  });
+  console.log('Database Connected');
+});
 // middleware
 app.use(cors())
 app.use(fileUpload());
