@@ -70,3 +70,22 @@ export const deleteUser = (req, res) => {
         res.status(500).send({ message: err.message });
     });
 }
+
+export const updateUser = async (req, res) => {
+    try { 
+        const data = await User.findByPk(req.userId)
+        if(data){
+            await data.update({password:bcrypt.hashSync(req.body.password, 8), username:req.body.username, display_name:req.body.display_name})
+            await data.save()
+            res.status(201).send({
+                message:true
+            })
+        }else{
+            res.status(201).send({
+                message:false
+            })
+        }
+    }catch (err) {
+        res.send(err)
+    }
+}

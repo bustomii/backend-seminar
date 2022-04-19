@@ -4,7 +4,7 @@ import { ExportData } from '../controllers/exportController.js'
 import { ImportData } from '../controllers/importController.js'
 import { changePassword, requestReset, signin  } from '../controllers/loginController.js'
 import { DataSeminar, DeleteAll } from '../controllers/seminarController.js'
-import { cekUsername, deleteAllUser, deleteUser, signup } from '../controllers/signupController.js'
+import { cekUsername, deleteAllUser, deleteUser, signup, updateUser } from '../controllers/signupController.js'
 import authJwt from '../middleware/authJWT.js'
 const router = express.Router()
 
@@ -21,7 +21,6 @@ router.post('/delete-user', authJwt.verifyToken, deleteUser)
 router.post('/reset-password', requestReset)
 router.post('/reset-password-approve', authJwt.verifyToken,  resetPasswordApprove)
 router.post('/change-password', authJwt.verifyToken,  changePassword)
-
-
+router.post('/edit-user', authJwt.verifyToken,  updateUser)
 
 export default router
